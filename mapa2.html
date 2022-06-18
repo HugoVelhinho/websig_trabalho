@@ -57,8 +57,6 @@
 		position: 'bottomleft',
 	}).addTo(map);
 	
-	map.attributionControl.addAttribution('Nº de casos: &copy; <a href="https://covid19.min-saude.pt/">Direção-Geral da Saúde</a>');
-	
 	info2.update = function (props) {
 		this._div.innerHTML = '<h4>Casos positivos a 23 do 1</h4>' +  (props ?
 			'<b>' + props.Concelho + '</b><br />' + props.Casos_23_1 + ' casos / 10.000 hab.'
@@ -89,9 +87,9 @@
 			},
 			pointToLayer: function (feature, latlng) {
 				return L.circleMarker(latlng, {
-					color: 'darkblue',
+					color: '#990505',
 					weight: 1,
-					fillColor: 'blue',
+					fillColor: 'red',
 					fillOpacity: 0.3,
 					radius: getRadius(feature.properties.Casos_23_1)
 				});
@@ -106,14 +104,15 @@
 				layer.on('mouseover', function () {
 					layer.bindPopup(popup).openPopup();
 					layer.setStyle({
-						fillColor: 'yellow',
+						fillColor: function getcolour () {
+						return '#ffd230';},
 						fillOpacity: 1
 					});
 				});
 
 				layer.on('mouseout', function () {
 					layer.setStyle({
-						fillColor: 'blue',
+						fillColor: 'red',
 						fillOpacity: 0.3
 					});
 					layer.bindPopup(popup).closePopup();
@@ -127,9 +126,6 @@
 		};
 	
 </script>
-
-
-
 
 </body>
 </html>
