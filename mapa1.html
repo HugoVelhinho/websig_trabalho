@@ -42,7 +42,7 @@
 	}).addTo(map);
 
 	// control that shows state info on hover
-	var info = L.control();
+	var info = L.control.scale().addTo(map);
 
 	info.onAdd = function (map) {
 		this._div = L.DomUtil.create('div', 'info');
@@ -59,7 +59,6 @@
 
 	info.addTo(map);
 
-	L.control.scale().addTo(map);
 
 	// get color depending on population density value
 	function getColor(d) {
