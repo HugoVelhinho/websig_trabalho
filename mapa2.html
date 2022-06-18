@@ -49,17 +49,16 @@
 		}
 
 		// create a Leaflet map in our division container with id of 'map'
-		var map = L.map('map').setView([39.696927, -7.729808], 6);
+		var map = L.map('map', options);
 
 		// Leaflet providers base map URL
 		var basemap_source =
-			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/dark_all/{z}/{x}/{y}.png'
+			'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
 
 		// Leaflet providers attributes
 		var basemap_options = {
-			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-			subdomains: 'abcd',
-			maxZoom: 19
+			attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+			maxZoom: 16
 		};
 
 		// request some basemap tiles and add to the map
