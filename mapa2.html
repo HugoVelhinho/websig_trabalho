@@ -30,7 +30,7 @@
 
 <div id='map'></div>
 
-<script type="text/javascript" src="./data/casospor10khab.geojson"></script>
+<script type="text/javascript" src="./data/casos.geojson"></script>
 
 <script type="text/javascript">
 
@@ -40,7 +40,13 @@
     		attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
    	 	maxZoom:16
 	}).addTo(map);
+	
+	var info = L.control();
 
+	info.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info');
+		this.update();
+		return this._div;
 	
 </script>
 
