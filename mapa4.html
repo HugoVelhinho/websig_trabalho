@@ -90,9 +90,9 @@
 			},
 			pointToLayer: function (feature, latlng) {
 				return L.circleMarker(latlng, {
-					color: 'darkblue',
+					color: '#990505',
 					weight: 1,
-					fillColor: 'blue',
+					fillColor: 'red',
 					fillOpacity: 0.3,
 					radius: getRadius(feature.properties.Casos_24_1)
 				});
@@ -106,14 +106,14 @@
 				layer.on('mouseover', function () {
 					layer.bindPopup(popup).openPopup();
 					layer.setStyle({
-						fillColor: 'yellow',
+						fillColor: '#f56607',
 						fillOpacity: 1
 					});
 				});
 
 				layer.on('mouseout', function () {
 					layer.setStyle({
-						fillColor: 'blue',
+						fillColor: 'red',
 						fillOpacity: 0.3
 					});
 					layer.bindPopup(popup).closePopup();
