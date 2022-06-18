@@ -57,8 +57,14 @@
 			: 'Consulta por concelho');
 	};
 
+	L.control.scale({
+	metric: true,
+	imperial: false,
+	position: 'downright'
+	}).add(map);
+	
 	info.addTo(map);
-
+})
 
 	// get color depending on population density value
 	function getColor(d) {
