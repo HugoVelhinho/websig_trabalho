@@ -51,6 +51,12 @@
 		return this._div;
 	};
 
+	L.control.scale({
+		metric: true,
+		imperial: false,
+		position: 'bottomleft',
+	}).addTo(map);
+	
 	info2.update = function (props) {
 		this._div.innerHTML = '<h4>Casos positivos a 23 do 1</h4>' +  (props ?
 			'<b>' + props.Concelho + '</b><br />' + props.Casos_23_1 + ' casos / 10.000 hab.'
@@ -121,11 +127,7 @@
 </script>
 
 
-	L.control.scale({
-		metric: true,
-		imperial: false,
-		position: 'bottomleft',
-	}).addTo(map);
+
 
 </body>
 </html>
