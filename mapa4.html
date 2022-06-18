@@ -42,6 +42,22 @@
     		attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
    	 	maxZoom:16
 	}).addTo(map);
+
+	var info2 = L.control();
+	
+	info2.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info');
+		this.update();
+		return this._div;
+	};
+
+	info2.update = function (props) {
+		this._div.innerHTML = '<h4>Casos positivos a 23 do 1</h4>' +  (props ?
+			'<b>' + props.Concelho + '</b><br />' + props.Casos_23_1 + ' casos / 10.000 hab.'
+			: 'Consulta por concelho');
+	};
+
+	info2.addTo(map);
 	
 	var info = L.control();
 
