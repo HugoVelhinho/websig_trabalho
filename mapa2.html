@@ -42,117 +42,116 @@
 	}).addTo(map);
 
 	// control that shows state info on hover
-	var info = L.control();
+	// create a Leaflet map in our division container with id of 'map'
+		var map = L.map('map', options);
 
-	info.onAdd = function (map) {
-		this._div = L.DomUtil.create('div', 'info');
-		this.update();
-		return this._div;
-	};
+		// Leaflet providers base map URL
+		var basemap_source =
+			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/dark_all/{z}/{x}/{y}.png'
 
-	info.update = function (props) {
-		this._div.innerHTML = '<h4>Casos por 10.000 habitantes</h4>' +  (props ?
-			'<b>' + props.Concelho + '</b><br />' + props.Casos_23_1 + ' casos / 10.000 hab.'
-			: 'Consulta por concelho');
-	};
-
-	info.addTo(map);
-
-
-	// get color depending on population density value
-	function getColor(d) {
-		return d > 30 ? '#800026' :
-				d > 17  ? '#BD0026' :
-				d > 10  ? '#E31A1C' :
-				d > 5   ? '#FC4E2A' :
-				d > 3   ? '#FD8D3C' :
-				d > 2   ? '#FEB24C' :
-				d > 1   ? '#FED976' :
-				d > 0   ? '#FFEDA0' :
-				d = 0   ? '#000000' :
-							'#FFFFFF';
-	}
-
-	function style(feature) {
-		return {
-			weight: 1,
-			opacity: 1,
-			color: 'white',
-			dashArray: '3',
-			fillOpacity: 1.0,
-			fillColor: getColor(feature.properties.Casos_23_1)
+		// Leaflet providers attributes
+		var basemap_options = {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+			subdomains: 'abcd',
+			maxZoom: 19
 		};
-	}
 
-	function highlightFeature(e) {
-		var layer = e.target;
+		// request some basemap tiles and add to the map
+		var tiles = L.tileLayer(basemap_source, basemap_options).addTo(map);
 
-		layer.setStyle({
-			weight: 5,
-			color: '#666',
-			dashArray: '',
-			fillOpacity: 0.7
+		plants.features.sort(function (a, b) {
+			return b.properties.capacity_mw - a.properties.capacity_mw;
 		});
 
-		if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-			layer.bringToFront();
-		}
-
-		info.update(layer.feature.properties);
-	}
-
-	var geojson;
-
-	function resetHighlight(e) {
-		geojson.resetStyle(e.target);
-		info.update();
-	}
-
-	function zoomToFeature(e) {
-		map.fitBounds(e.target.getBounds());
-	}
-
-	function onEachFeature(feature, layer) {
-		layer.on({
-			mouseover: highlightFeature,
-			mouseout: resetHighlight,
-			click: zoomToFeature
-		});
-	}
-
-	geojson = L.geoJson(casospor10khab, {
-		style: style,
-		onEachFeature: onEachFeature
-	}).addTo(map);
-
-	map.attributionControl.addAttribution('Número de casos: &copy; <a href="https://covid19.min-saude.pt/">Direção-Geral da Saúde</a>');
 
 
-	var legend = L.control({position: 'bottomright'});
+		// var popup = '<h3>' + hotspots[i].name + '</h3>'
+		// Load power plants
+		L.geoJson(plants, {
+			filter: function (feature) {
+				if (feature.properties.fuel_source.Hydro) { // This test to see if the key exits
+					return feature;
+				}
+			},
+			pointToLayer: function (feature, latlng) {
+				return L.circleMarker(latlng, {
+					color: 'darkblue',
+					weight: 1,
+					fillColor: 'blue',
+					fillOpacity: 0.3,
+					radius: getRadius(feature.properties.capacity_mw)
+				});
+			},
+			onEachFeature: function (feature, layer) {
+				var popup =
+					'<p><b>' + layer.feature.properties.plant_name + '</b></p>' +
+					'<p>Max capacity: ' + layer.feature.properties.capacity_mw + ' MW</p>' +
+					'<p>Hydro: ' + layer.feature.properties.fuel_source.Hydro + ' MW</p>'
 
-	legend.onAdd = function (map) {
+				layer.on('mouseover', function () {
+					layer.bindPopup(popup).openPopup();
+					layer.setStyle({
+						fillColor: 'yellow',
+						fillOpacity: 1
+					});
+				});
 
-		var div = L.DomUtil.create('div', 'info legend'),
-			grades = [0, 1, 2, 3, 5, 10, 17, 30],
-			labels = [],
-			from, to;
+				layer.on('mouseout', function () {
+					layer.setStyle({
+						fillColor: 'blue',
+						fillOpacity: 0.3
+					});
+					layer.bindPopup(popup).closePopup();
+				})
 
-		for (var i = 0; i < grades.length; i++) {
-			from = grades[i];
-			to = grades[i + 1];
+			}
+		}).addTo(map);
 
-			labels.push(
-				'<i style="background:' + getColor(from + 1) + '"></i> ' +
-				from + (to ? '&ndash;' + to : '+'));
-		}
+		L.geoJson(plants, {
+			filter: function (feature) {
+				if (feature.properties.fuel_source.Biomass) { // This test to see if the key exits
+					return feature;
+				}
+			},
+			pointToLayer: function (feature, latlng) {
+				return L.circleMarker(latlng, {
+					color: 'darkbrown',
+					weight: 1,
+					fillColor: 'brown',
+					fillOpacity: 0.3,
+					radius: getRadius(feature.properties.capacity_mw)
+				});
+			},
+			onEachFeature: function (feature, layer) {
+				var popup =
+					'<p><b>' + layer.feature.properties.plant_name + '</b></p>' +
+					'<p>Max capacity: ' + layer.feature.properties.capacity_mw + ' MW</p>' +
+					'<p>Biomass: ' + layer.feature.properties.fuel_source.Biomass + ' MW</p>'
 
-		div.innerHTML = labels.join('<br>');
-		return div;
-	};
+				layer.on('mouseover', function () {
+					layer.bindPopup(popup).openPopup();
+					layer.setStyle({
+						fillColor: 'yellow',
+						fillOpacity: 1
+					});
+				});
 
-	legend.addTo(map);
+				layer.on('mouseout', function () {
+					layer.setStyle({
+						fillColor: 'brown',
+						fillOpacity: 0.3
+					});
+					layer.bindPopup(popup).closePopup();
+				})
 
-</script>
+			}
+		}).addTo(map);
+
+		function getRadius(area) {
+			var radius = Math.sqrt(area / Math.PI);
+			return radius * 0.6;
+		};
+
 
 
 
