@@ -50,6 +50,8 @@
 		return this._div;
 	};
 
+	L.control.scale().addTo(map);
+	
 	info.update = function (props) {
 		this._div.innerHTML = '<h4>Casos por 10.000 habitantes a 23 do 1</h4>' +  (props ?
 			'<b>' + props.Concelho + '</b><br />' + props.Casos_23_1 + ' casos / 10.000 hab.'
