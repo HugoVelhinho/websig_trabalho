@@ -50,7 +50,7 @@
 		return this._div;
 	};
 
-	L.control.scale().into(Map);
+	L.control.scale().addTo(map);
 	
 	info.update = function (props) {
 		this._div.innerHTML = '<h4>Casos por 10.000 habitantes a 23 do 1</h4>' +  (props ?
@@ -58,7 +58,6 @@
 			: 'Consulta por concelho');
 	};
 
-	
 	info.addTo(map);
 
 
