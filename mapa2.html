@@ -112,6 +112,11 @@
    	 	maxZoom:16
 	}).addTo(map);
 
+		geojson = L.geoJson(casos, {
+			style: style,
+			onEachFeature: onEachFeature
+		}).addTo(map);
+	
 		casos.features.sort(function (a, b) {
 			return b.properties.Casos_23_1;
 		});
