@@ -36,17 +36,38 @@
 <script type="text/javascript" src="./data/casospor10khab.geojson"></script>
 
 <script type="text/javascript"><script/>
-<srpipt>
-	var map = L.map('map').setView([39.696927, -7.729808], 6);
+		<script>
+		// map options
+		var options = {
+			center: [39.7, -8.0],
+			zoom: 6
+		}
 
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    		attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-   	 	maxZoom:16
-	}).addTo(map);
-	casos.features.sort(function (a, b) {
+		// create a Leaflet map in our division container with id of 'map'
+		var map = L.map('map', options);
+
+		// Leaflet providers base map URL
+		var basemap_source =
+			'https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/dark_all/{z}/{x}/{y}.png'
+
+		// Leaflet providers attributes
+		var basemap_options = {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+			subdomains: 'abcd',
+			maxZoom: 19
+		};
+
+		// request some basemap tiles and add to the map
+		var tiles = L.tileLayer(basemap_source, basemap_options).addTo(map);
+
+		casos.features.sort(function (a, b) {
 			return b.properties.Casos_23_1;
 		});
-			Casos_23_1 = L.geoJson(casos, {
+
+
+		// var popup = '<h3>' + hotspots[i].name + '</h3>'
+		// Load power casos
+		Casos_23_1 = L.geoJson(casos, {
 			filter: function (feature) {
 				if (feature.properties.Casos_23_1) { // This test to see if the key exits
 					return feature;
@@ -85,10 +106,53 @@
 
 			}
 		}).addTo(map);
-			function getRadius(area) {
+
+		Casos_24_1 = L.geoJson(casos, {
+			filter: function (feature) {
+				if (feature.properties.Casos_24_1) { // This test to see if the key exits
+					return feature;
+				}
+			},
+			pointToLayer: function (feature, latlng) {
+				return L.circleMarker(latlng, {
+					color: 'red',
+					weight: 1,
+					fillColor: 'red',
+					fillOpacity: 0.3,
+					radius: getRadius(feature.properties.Casos_24_1)
+				});
+			},
+			onEachFeature: function (feature, layer) {
+				var popup =
+					'<p><b>' + layer.feature.properties.Concelho + '</b></p>' +
+					'<p>Max capacity: ' + layer.feature.properties.Casos_24_1 + ' MW</p>' +
+					
+
+				layer.on('mouseover', function () {
+					layer.bindPopup(popup).openPopup();
+					layer.setStyle({
+						fillColor: 'yellow',
+						fillOpacity: 1
+					});
+				});
+
+				layer.on('mouseout', function () {
+					layer.setStyle({
+						fillColor: 'red',
+						fillOpacity: 0.3
+					});
+					layer.bindPopup(popup).closePopup();
+				})
+
+			}
+		}).addTo(map);
+		function getRadius(area) {
 			var radius = Math.sqrt(area / Math.PI);
 			return radius * 2.0;
-</script>
+		};
+	</script>
+
+
 
 
 </body>
