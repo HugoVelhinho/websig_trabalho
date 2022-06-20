@@ -54,6 +54,10 @@
 		return this._div;
 	};
 
+	var northWest = L.latLng(42.278,-13.082),
+	      southEast = L.latLng(36.824,-2.665),
+	        maxBoundArea = L.latLngBounds(northWest, southEast);
+	
 	var positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
         attribution: '©OpenStreetMap, ©CartoDB'
 		}).addTo(map);
