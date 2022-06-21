@@ -59,7 +59,7 @@
 	
 	info.update = function (props) {
 		this._div.innerHTML = '<h4>Casos por 10.000 habitantes a 24 do 1</h4>' +  (props ?
-			'<b>' + props.Concelho + '</b><br />' + props.Casos_24_1 + ' casos / 10.000 hab.'
+			'<b>' + props.Concelho + '</b><br />' + props.Casos_24_1.toFixed(1) + ' casos / 10.000 hab.'
 			: 'Consulta por concelho');
 	};
 
